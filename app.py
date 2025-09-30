@@ -4,7 +4,7 @@ import ollama
 import chromadb
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OllamaEmbeddings
-from langchain_ollama import OllamaLLM,OllamaEmbeddings
+from langchain_ollama import OllamaEmbeddings
 import utils
 import os
 import uuid
@@ -63,7 +63,7 @@ def ask_bot(data: Question):
         messages=[
             {'role': 'user', 'content': prompt}
         ],
-        keep_alive=-1
+        keep_alive=-1 # Keep the model loaded for faster subsequent calls
     )
 
     msgs = [response['message']['content'][i:i + 4096] for i in range(0, len(response['message']['content']), 4096)]
@@ -125,8 +125,6 @@ async def upload_file_with_data(
         "content_type": file.content_type,
         "size_mb": round(file.size/(1024*1024),2)
     }
-
-
 
 @app.post("/delete_doc/")
 def delete_doc(document:Document):
